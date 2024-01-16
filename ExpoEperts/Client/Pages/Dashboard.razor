@@ -1,0 +1,93 @@
+﻿@page "/products"
+@inject HttpClient HttpClient
+@using ExpoEperts.Shared
+@inject NavigationManager nvm
+<style>
+    table {
+        margin-top: 10%;
+        width: 70%;
+        border: 1px solid;
+        margin-left: 6%;
+    }
+
+    th {
+        height: 70%;
+        border: 1px solid;
+        text-align: center;
+        background-color: #ddd;
+        color: black;
+        padding: 10px;
+        font-style: italic;
+        font-family: 'Adobe Arabic';
+        font-size: 26px;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        border: 1px solid;
+        text-align: center;
+        padding: 7px;
+        font-style: italic;
+        font-size: 20px;
+        font-family: 'Adobe Arabic';
+    }
+
+  
+</style>
+
+<h3>Product Detail</h3>
+
+@if (products != null)
+{
+    <table>
+        <tr>
+            <th>Product ID</th>
+            <th>Selller ID</th>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var product in products)
+        {
+            <tr>
+                <td>@product.id</td>
+                <td>@product.sellerId</td>
+                <td>@product.name</td>
+                <td>@product.description</td>
+                <td>@product.price</td>
+                <td>@product.category</td>
+               
+                <td>
+                    <button @onclick="(() => EditProduct(product.id))" class="btn-dark">Edit</button>
+                    <button @onclick="(() => DeleteProduct(product.id))" class="btn-danger">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@code {
+   
+    List<Product> products = new List<Product>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await HttpClient.GetFromJsonAsync<List<Product>>("api/products");
+    }
+
+    private void EditProduct(int productId)
+    {
+        nvm.NavigateTo($"/products/edit/{productId}");
+    }
+
+    private void DeleteProduct(int productId)
+    {
+        nvm.NavigateTo($"/products/delete/{productId}");
+    }
+}

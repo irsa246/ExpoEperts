@@ -1,0 +1,105 @@
+﻿@page "/products/add"
+@inject HttpClient HttpClient
+@inject NavigationManager nvm
+@using ExpoEperts.Shared
+<style>
+    .form {
+        margin-top: 5%;
+        width: 50%;
+        margin-left: 20%;
+        align-content: center;
+    }
+
+    label {
+        font-style: italic;
+        font-size: 25px;
+        font-family: 'Adobe Arabic';
+    }
+
+    input[type="text"] {
+        padding: 12px 20px;
+        width: 70%;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    input[type="number"] {
+        padding: 12px 20px;
+        width: 70%;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        padding: 12px 20px;
+        width: 70%;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border-radius: 15px;
+        font-family: 'Adobe Arabic';
+        font-style: italic;
+        font-size: 25px;
+        font-weight: bold;
+    }
+
+    h2 {
+        font-family: 'Adobe Arabic';
+        font-style: italic;
+        font-size: 40px;
+        font-weight: bold;
+        margin-left: 27%;
+        margin-top: 5%;
+    }
+</style>
+<h3>Add Product</h3>
+<div class="form">
+<EditForm Model="@product" OnValidSubmit="Add_Product">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Enter Product Name:</label>
+        <input type="text" id="name" @bind="@product.name" />
+        <ValidationMessage For="@(() => product.name)" />
+    </div>
+        <div class="form-group">
+            <label for="name">Enter Seller Id:</label>
+            <input type="number" id="name" @bind="@product.sellerId" />
+            <ValidationMessage For="@(() => product.sellerId)" />
+        </div>
+
+    <div class="form-group">
+        <label for="description">Enter Product Description:</label>
+        <input type="text" id="description" @bind="@product.description" />
+        <ValidationMessage For="@(() => product.description)" />
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="number" id="price" @bind="@product.price" />
+        <ValidationMessage For="@(() => product.price)" />
+    </div>
+        <div class="form-group">
+            <label for="price">Enter Category:</label>
+            <input type="text" id="price" @bind="@product.category" />
+            <ValidationMessage For="@(() => product.category)" />
+        </div>
+    <div class="form-group">
+        <button type="submit">Add Product</button>
+    </div>
+</EditForm>
+<p>@product.name</p>
+<p>@product.price</p>
+</div>
+
+@code {
+    public Product product = new Product();
+
+     private async Task Add_Product()
+    {
+        await HttpClient.PostAsJsonAsync("api/products", product);
+        nvm.NavigateTo("/dashboard");
+    }
+
+   
+}
